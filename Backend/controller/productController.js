@@ -87,6 +87,21 @@ const deleteProduct = async (req, res, next) => {
   });
 };
 
+const update = {}
+ if (!id) {
+    return res.status(400).json({ message: "Name and Price are required!!" });
+  }
+
+  await product.destroy();
+  return res.status(200).json({
+    message: "Product is deleted successfully",
+    deletedProducts: product,
+  });
+
+
+
+
+
 export {
   createProduct,
   getAllProduct,
