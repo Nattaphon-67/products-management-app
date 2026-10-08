@@ -1,0 +1,52 @@
+services:
+  - type: web
+    name: product-management-backend
+    env: node
+    rootDir: Backend
+    buildCommand: npm install
+    startCommand: npm start
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        generateValue: true
+      - key: DB_HOST
+        fromDatabase:
+          name: product-management-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: product-management-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: product-management-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: product-management-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: product-management-db
+          property: password
+
+  - type: static
+    name: product-management-frontend
+    rootDir: Frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /**
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        value: https://product-management-backend.onrender.com/api
+
+ databases:
+  - name: product-management-db
+    databaseName: product_management
+    user: product_management_user
+    plan: free
