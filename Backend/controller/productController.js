@@ -8,18 +8,21 @@ const createProduct = async (req, res, next) => {
         .status(400)
         .json({ message: "Name and Price are required fields" });
     }
+
     const newProduct = await Product.create({
       name,
       price: Number(price),
       description,
       image,
     });
+
     return res.status(201).json(newProduct);
   } catch (error) {
     return next(error);
   }
 };
-const getAllProduct = async (req, res, next) => {
+
+const getAllProduct = async (req, res) => {
   try {
     const products = await Product.findAll();
     return res.status(200).json(products);
@@ -27,22 +30,26 @@ const getAllProduct = async (req, res, next) => {
     return res.status(500).json({ error: error.message });
   }
 };
-const getProductById = async (req, res, next) => {
+
+const getProductById = async (req, res) => {
   try {
     const { id } = req.params;
     if (!id) {
       return res.status(400).json({ message: "Name and Price are required!!" });
     }
+
     const product = await Product.findByPk(id);
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
+
     return res.status(200).json(product);
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
 };
-const updateProduct = async (req, res, next) => {
+
+const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
     if (!id) {
@@ -55,52 +62,44 @@ const updateProduct = async (req, res, next) => {
         .status(400)
         .json({ message: "Name and Price are required fields!!" });
     }
+
     const product = await Product.findByPk(id);
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
+
     await product.update({
       name: name || product.name,
       price: Number(price) || product.price,
     });
-    console.log(product);
 
     return res.status(200).json(product);
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ error: error.message });
   }
 };
-const deleteProduct = async (req, res, next) => {
-  const { id } = req.params;
-  if (!id) {
-    return res.status(400).json({ message: "Name and Price are required!!" });
+
+const deleteProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ message: "Name and Price are required!!" });
+    }
+
+    const product = await Product.findByPk(id);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    await product.destroy();
+    return res.status(200).json({
+      message: "Product is deleted successfully",
+      deletedProducts: product,
+    });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
   }
-  const product = await Product.findByPk(id);
-  if (!product) {
-    return res.status(404).json({ message: "Product not found" });
-  }
-  await product.destroy();
-  return res.status(200).json({
-    message: "Product is deleted successfully",
-    deletedProducts: product,
-  });
 };
-
-const update = {}
- if (!id) {
-    return res.status(400).json({ message: "Name and Price are required!!" });
-  }
-
-  await product.destroy();
-  return res.status(200).json({
-    message: "Product is deleted successfully",
-    deletedProducts: product,
-  });
-
-
-
-
 
 export {
   createProduct,

@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Addproduct from "../pages/Addproduct";
 import Editproduct from "../pages/Editproduct";
-import Productform from "../pages/Productform";
+import ProductFormPage from "../pages/ProductFormPage";
 import Productpage from "../pages/Productpage";
 
 function App() {
@@ -12,7 +12,7 @@ function App() {
         <Route path="/productpage" element={<Productpage />} />
         <Route path="/addproduct/new" element={<Addproduct />} />
         <Route path="/editproduct/:id" element={<Editproduct />} />
-        <Route path="*" element={<Productform />} />
+        <Route path="*" element={<ProductFormPage />} />
       </Routes>
     </BrowserRouter>
   );
