@@ -34,8 +34,9 @@ services:
           name: product-management-db
           property: password
 
-  - type: static
+  - type: web
     name: product-management-frontend
+    runtime: static
     rootDir: Frontend
     buildCommand: npm install && npm run build
     staticPublishPath: dist
