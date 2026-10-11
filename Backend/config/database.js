@@ -42,14 +42,13 @@ if (process.env.DATABASE_URL) {
 const connectDB = async () => {
   try {
     await sequelize.authenticate();
-    console.log("Connected to PostgreSQL!");
+    console.log("Connected to PostgreSQL successfully!");
     await sequelize.sync({
       alter: process.env.NODE_ENV === "development",
     });
     console.log("Table Synchronized!");
   } catch (error) {
-    console.error("Connection failed", error);
-    process.exit(1);
+    console.error("Database connection failed:", error.message);
   }
 };
 
