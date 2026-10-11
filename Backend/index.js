@@ -18,9 +18,15 @@ connectDB();
 app.get("/", (req, res) => {
   return res
     .status(200)
-    .send("<h> Welcome to Restful API Product Management App</h>");
+    .send("<h1>Welcome to Restful API Product Management App</h1>");
+});
+
+app.get("/health", (req, res) => {
+  return res.status(200).json({ status: "ok" });
 });
 
 app.listen(PORT, () => {
   console.log(`Server is running on: http://localhost:${PORT}`);
 });
+
+export default app;

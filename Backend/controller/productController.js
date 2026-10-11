@@ -3,7 +3,7 @@ import Product from "../model/productModel.js";
 const createProduct = async (req, res, next) => {
   try {
     const { name, price, description, image } = req.body;
-    if (!name || !price) {
+    if (!name || price === undefined || price === null || price === "") {
       return res
         .status(400)
         .json({ message: "Name and Price are required fields" });
@@ -12,8 +12,8 @@ const createProduct = async (req, res, next) => {
     const newProduct = await Product.create({
       name,
       price: Number(price),
-      description,
-      image,
+      description: description || null,
+      image: image || null,
     });
 
     return res.status(201).json(newProduct);
@@ -35,7 +35,7 @@ const getProductById = async (req, res) => {
   try {
     const { id } = req.params;
     if (!id) {
-      return res.status(400).json({ message: "Name and Price are required!!" });
+      return res.status(400).json({ message: "Product ID is required" });
     }
 
     const product = await Product.findByPk(id);
@@ -53,14 +53,19 @@ const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
     if (!id) {
-      return res.status(400).json({ message: "Name and Price are required!!" });
+      return res.status(400).json({ message: "Product ID is required" });
     }
 
-    const { name, price } = req.body;
-    if (!name && !price) {
+    const { name, price, description, image } = req.body;
+    if (
+      name === undefined &&
+      price === undefined &&
+      description === undefined &&
+      image === undefined
+    ) {
       return res
         .status(400)
-        .json({ message: "Name and Price are required fields!!" });
+        .json({ message: "At least one field is required to update" });
     }
 
     const product = await Product.findByPk(id);
@@ -69,8 +74,10 @@ const updateProduct = async (req, res) => {
     }
 
     await product.update({
-      name: name || product.name,
-      price: Number(price) || product.price,
+      name: name !== undefined ? name : product.name,
+      price: price !== undefined && price !== "" ? Number(price) : product.price,
+      description: description !== undefined ? description : product.description,
+      image: image !== undefined ? image : product.image,
     });
 
     return res.status(200).json(product);
@@ -83,7 +90,7 @@ const deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;
     if (!id) {
-      return res.status(400).json({ message: "Name and Price are required!!" });
+      return res.status(400).json({ message: "Product ID is required" });
     }
 
     const product = await Product.findByPk(id);
